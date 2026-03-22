@@ -1,0 +1,24 @@
+{
+  "name": "Mis Finanzas VE",
+  "short_name": "Finanzas",
+  "description": "App de finanzas personales multimoneda para Venezuela",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a1f",
+  "theme_color": "#00b894",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
