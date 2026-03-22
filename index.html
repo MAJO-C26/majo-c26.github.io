@@ -1490,6 +1490,13 @@ function initFirebase() {
     auth = firebase.auth();
     console.log('✓ Firebase conectado');
 
+    // Handle redirect result first (for mobile)
+    auth.getRedirectResult().catch(e => {
+      if (e.code !== 'auth/no-current-user') {
+        console.warn('Redirect result error:', e.message);
+      }
+    });
+
     // Listen for auth state changes
     auth.onAuthStateChanged(user => {
       if (user) {
@@ -1516,8 +1523,10 @@ function initFirebase() {
 function loginWithGoogle() {
   if (!auth) return;
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(e => {
+  // signInWithRedirect works better on mobile browsers
+  auth.signInWithRedirect(provider).catch(e => {
     showToast('Error al iniciar sesión: ' + e.message);
+    console.error('Login error:', e);
   });
 }
 
