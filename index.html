@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
 <meta name="theme-color" content="#00b894" id="themeColorMeta">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 <title>Mis Finanzas VE</title>
 <!-- Firebase SDK -->
@@ -2542,9 +2542,11 @@ function closeOverlayOutside(id,e) { if(e.target.id===id) closeOverlay(id); }
 if ('serviceWorker' in navigator &&
     location.hostname !== 'localhost' &&
     !location.hostname.includes('claudeusercontent')) {
-  navigator.serviceWorker.register('/sw.js', { scope: '/' })
+  // Use relative path so it works on GitHub Pages subfolders
+  const swPath = location.pathname.replace(/\/[^\/]*$/, '/') + 'sw.js';
+  navigator.serviceWorker.register(swPath, { scope: location.pathname.replace(/\/[^\/]*$/, '/') })
     .then(() => console.log('✓ SW registrado'))
-    .catch(e => console.log('SW error:', e.message));
+    .catch(e => console.log('SW no disponible:', e.message));
 }
 
 // ════════════════════════════════════════════════
