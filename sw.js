@@ -1,7 +1,7 @@
 // Service Worker para Mis Finanzas VE
 // Permite instalación como PWA y funcionamiento offline básico
 
-const CACHE_NAME = 'finanzas-ve-v3';
+const CACHE_NAME = 'finanzas-ve-v4';
 const FILES_TO_CACHE = ['/', '/index.html', '/manifest.json', '/icon.png'];
 
 // Al instalar: guarda los archivos principales en caché
@@ -24,6 +24,11 @@ self.addEventListener('activate', event => {
 
 // Al hacer fetch: devuelve desde caché si está disponible, si no va a la red
 self.addEventListener('fetch', event => {
+  // IGNORAR peticiones de autenticación y servicios de Firebase
+  if (event.request.url.includes('/__/')) {
+    return; // Bypass Service Worker
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );
