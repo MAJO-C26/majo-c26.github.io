@@ -1,27 +1,18 @@
-// Service Worker — Mis Finanzas VE
-// Compatible con GitHub Pages (subcarpeta)
+// Service Worker para Mis Finanzas VE
+// Permite instalación como PWA y funcionamiento offline básico
 
 const CACHE_NAME = 'finanzas-ve-v3';
+const FILES_TO_CACHE = ['/', '/index.html', '/manifest.json', '/icon.png'];
 
-// Obtiene la base path automáticamente (funciona en / y en /mis-finanzas-ve/)
-const BASE_PATH = self.location.pathname.replace('/sw.js', '');
-
-const FILES_TO_CACHE = [
-  BASE_PATH + '/',
-  BASE_PATH + '/index.html',
-  BASE_PATH + '/manifest.json',
-  BASE_PATH + '/icon.png',
-];
-
+// Al instalar: guarda los archivos principales en caché
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(FILES_TO_CACHE))
-      .catch(e => console.log('Cache parcial:', e))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
   );
   self.skipWaiting();
 });
 
+// Al activar: limpia cachés viejas de versiones anteriores
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -31,10 +22,9 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+// Al hacer fetch: devuelve desde caché si está disponible, si no va a la red
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request))
-      .catch(() => caches.match(BASE_PATH + '/index.html'))
+    caches.match(event.request).then(cached => cached || fetch(event.request))
   );
 });
